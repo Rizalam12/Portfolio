@@ -1,0 +1,71 @@
+Create a modern, professional, and visually impressive developer portfolio website for a Full Stack Developer.
+
+Developer Details:
+Name: Md Rizwan Alam
+Role: Full Stack Developer | Software Engineer
+Phone: +91 6206712882
+Email: mdrizwanalam21@gmail.com
+LinkedIn: https://www.linkedin.com/in/mdrizwanalam
+GitHub: https://github.com/Rizalam12
+
+About Section:
+Motivated Software Engineer and MCA student with experience in full-stack development using React, Next.js, Node.js, and Django. Skilled in building scalable web applications, integrating REST APIs, and optimizing performance. Passionate about creating efficient, user-friendly applications and continuously learning new technologies.
+
+Education:
+MCA – Jamia Hamdard University, New Delhi (Expected 2026)
+BCA – Ranchi University, Jharkhand (2020–2023) | CGPA: 7.97
+
+Technical Skills:
+Frontend: HTML, CSS, JavaScript, React.js, Next.js, Tailwind CSS
+Backend: Node.js, Python, Django
+Database: MySQL, SQLite
+Tools: VS Code, PyCharm, Google Colab, Jira, Bitbucket
+Concepts: REST APIs, WordPress, Data Structures & Algorithms
+
+Internship Experience:
+
+Full Stack Developer Intern – Blue Planet, Pune (July 2025 – Dec 2025)
+- Developed scalable web applications using React, Next.js, and Node.js
+- Integrated REST APIs and optimized database queries improving performance by 30%
+- Improved system architecture for better scalability
+
+WordPress Developer Intern – FADWRAP, Chandigarh (Sept 2022 – Mar 2023)
+- Developed 15+ client websites using WordPress, Bootstrap, HTML, CSS, and JavaScript
+- Increased website traffic by 50% using SEO techniques
+- Built responsive and optimized websites
+
+Projects:
+
+Crypto Tracker
+- Real-time cryptocurrency tracking app using CoinGecko API
+- Built with React.js and Tailwind CSS
+- Live price charts and market statistics
+- Reusable component-based architecture
+
+Task Management System
+- Full-stack Django web application
+- Secure authentication system (login/signup)
+- CRUD functionality for task management
+- Responsive UI for cross-device usage
+
+Certifications:
+AWS Educate – Cloud 101
+Python Using AI (Fundamentals)
+
+Portfolio Requirements:
+- Clean modern UI with dark/light mode
+- Responsive design (mobile, tablet, desktop)
+- Smooth animations and transitions
+- Sections: Hero, About, Skills, Experience, Projects, Certifications, Contact
+- Project cards with GitHub and Live Demo buttons
+- Contact form with email integration
+- Social links (GitHub, LinkedIn)
+- SEO optimized
+- Professional color palette (dark tech theme)
+
+Tech Stack for Portfolio:
+Next.js + React
+Tailwind CSS
+Framer Motion animations
+
+The design should look like portfolios of top developers and be attractive to recruiters and tech companies.
