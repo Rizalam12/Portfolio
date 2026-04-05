@@ -34,7 +34,7 @@ const endRef = useRef<HTMLDivElement>(null);
 
   const sendMutation = useMutation({
     mutationFn: async (message: string) => {
-      const res = await apiRequest("POST", api.chat.create.path, { message });
+const res = await apiRequest("POST", "/api/chat", { message });
       return res.json();
     },
     onMutate: async (message: string) => {
