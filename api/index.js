@@ -9,6 +9,14 @@ app.use(express.json())
 
 // Chat route
 app.post("/api/chat", async (req, res) => {
+  return handleChat(req, res)
+})
+
+app.post("/api/messages", async (req, res) => {
+  return handleChat(req, res)
+})
+
+async function handleChat(req, res) {
   try {
     const { message } = req.body
 
