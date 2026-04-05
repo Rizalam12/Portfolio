@@ -1,9 +1,14 @@
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
-import path from "path";
+import { defineConfig } from "vite"
+import react from "@vitejs/plugin-react"
+import path from "path"
 
 export default defineConfig({
   plugins: [react()],
+  root: "client",
+  build: {
+    outDir: "../dist/public",
+    emptyOutDir: true,
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "client/src"),
@@ -11,21 +16,16 @@ export default defineConfig({
       "@assets": path.resolve(__dirname, "attached_assets"),
     },
   },
-  root: "client",
-  base: "/",
-  build: {
-    outDir: "../dist",
-    emptyOutDir: true,
-  },
   server: {
-    port: 3000,
-    open: true,
-    fs: {
-      allow: [".."]
-    }
+    port: 5000,
+    proxy: {
+      "/api": {
+        target: "http://localhost:5000",
+        changeOrigin: true,
+      },
+    },
   },
   preview: {
-    port: 4173,
-    open: true
+    port: 4173
   }
-});
+})
