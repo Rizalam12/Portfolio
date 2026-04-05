@@ -1,0 +1,9 @@
+- [x] 1. Create TODO-RESET-CHAT.md
+- [x] 2. Add localMessages state + welcomeMsg constant
+- [x] 3. useEffect: if (!isOpen) setLocalMessages([welcomeMsg]); setInput('')
+- [ ] 4. Remove useQuery, use localMessages for messages/showWelcome/map
+- [ ] 5. Update sendMutation: optimistic append user msg, onSuccess append AI msg (res.json())
+- [ ] 6. Update scroll useEffect deps to localMessages, isPending
+- [ ] 7. Focus useEffect ok
+- [ ] 8. Test HMR, behavior
+- [ ] 9. Complete

@@ -1,20 +1,11 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageSquare, Send, X, Bot, RotateCcw } from "lucide-react";
+import { MessageSquare, Send, X, Bot } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { api } from "@shared/routes";
 import { apiRequest, queryClient } from "@/lib/queryClient";
@@ -24,59 +15,74 @@ import type { ChatMessage } from "@shared/schema";
 export function ChatBot() {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState("");
-  const [showResetConfirm, setShowResetConfirm] = useState(false);
+
+  const [localMessages, setLocalMessages] = useState<ChatMessage[]>([]);
+
+  const welcomeMsg: ChatMessage = {
+    id: 'welcome',
+    role: 'assistant',
+    content: "👋 Hi there!\nAsk me anything about Rizwan — skills, projects, experience, education, certifications, or contact. I answer only what you ask.",
+  };
+
 const endRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const toggleButtonRef = useRef<HTMLButtonElement>(null);
   const chatRef = useRef<HTMLDivElement>(null);
 
   const { toast } = useToast();
-  const { data: messages = [] } = useQuery<ChatMessage[]>({
-    queryKey: [api.chat.list.path],
-    enabled: isOpen,
-  });
 
   const sendMutation = useMutation({
     mutationFn: async (message: string) => {
       const res = await apiRequest("POST", api.chat.create.path, { message });
       return res.json();
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [api.chat.list.path] });
-      setInput("");
+    onMutate: async (message: string) => {
+      const optimisticUser: ChatMessage = {
+        id: `temp-${Date.now()}`,
+        role: 'user',
+        content: message,
+      };
+      setLocalMessages(prev => [...prev, optimisticUser]);
+      setInput('');
+      return { optimisticId: optimisticUser.id };
     },
-    onError: (error: Error) => {
+    onSuccess: (data) => {
+      console.log('Chat API response:', data);
+      const aiContent = data.message || 'No response received.';
+      const aiMsg: ChatMessage = {
+        id: `ai-${Date.now()}`,
+        role: 'assistant',
+        content: aiContent,
+      };
+      setLocalMessages(prev => [...prev, aiMsg]);
+    },
+    onError: (err, message, context) => {
+      console.log('Chat API error:', err);
       toast({
         title: "Couldn't send message",
-        description: error.message || "Something went wrong. Please try again.",
+        description: err.message || "Something went wrong. Please try again.",
         variant: "destructive",
       });
+      if (context?.optimisticId) {
+        setLocalMessages(prev => prev.filter(msg => msg.id !== context.optimisticId));
+      }
     },
   });
 
-  const resetMutation = useMutation({
-    mutationFn: async () => {
-      const res = await apiRequest("DELETE", api.chat.reset.path);
-      return res.json();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [api.chat.list.path] });
-      setShowResetConfirm(false);
-    },
-    onError: (error: Error) => {
-      toast({
-        title: "Couldn't clear chat",
-        description: error.message || "Please try again.",
-        variant: "destructive",
-      });
-      setShowResetConfirm(false);
-    },
-  });
+
 
   // Scroll to bottom when messages change
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, sendMutation.isPending]);
+  }, [localMessages.length, sendMutation.isPending]);
+
+  // Reset on close
+  useEffect(() => {
+    if (!isOpen) {
+      setLocalMessages([welcomeMsg]);
+      setInput("");
+    }
+  }, [isOpen]);
 
   // Focus input when opening, focus toggle when closing
   useEffect(() => {
@@ -127,10 +133,9 @@ const endRef = useRef<HTMLDivElement>(null);
     sendMutation.mutate(trimmed);
   };
 
-  const handleResetClick = () => setShowResetConfirm(true);
-  const handleResetConfirm = () => resetMutation.mutate();
 
-  const showWelcome = isOpen && messages.length === 0;
+
+  const showWelcome = isOpen && localMessages.length === 0;
   const canSend = input.trim().length > 0 && !sendMutation.isPending;
 
   return (
@@ -160,31 +165,6 @@ const endRef = useRef<HTMLDivElement>(null);
                   </div>
                 </div>
                 <div className="flex items-center gap-0.5 shrink-0">
-                  {messages.length > 0 && (
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={handleResetClick}
-                      disabled={resetMutation.isPending}
-                      className="h-8 w-8 hover:bg-primary/10 text-muted-foreground hover:text-foreground"
-                      aria-label="Clear chat"
-                      title="Clear chat"
-                    >
-                      <RotateCcw className="w-4 h-4" />
-                    </Button>
-                  )}
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => {
-                      resetMutation.mutate();
-                      setIsOpen(false);
-                    }}
-                    className="h-8 w-8 hover:bg-primary/10"
-                    aria-label="Close chat"
-                  >
-                    <X className="w-4 h-4" />
-                  </Button>
                 </div>
               </div>
 
@@ -205,7 +185,7 @@ const endRef = useRef<HTMLDivElement>(null);
                       </div>
                     </motion.div>
                   )}
-                  {messages.map((msg) => (
+{localMessages.map((msg) => (
                     <motion.div
                       key={msg.id}
                       initial={{ opacity: 0, y: 8 }}
@@ -293,27 +273,6 @@ const endRef = useRef<HTMLDivElement>(null);
         {isOpen ? <X className="w-6 h-6" /> : <MessageSquare className="w-6 h-6" />}
       </Button>
 
-      {/* Reset confirmation */}
-      <AlertDialog open={showResetConfirm} onOpenChange={setShowResetConfirm}>
-        <AlertDialogContent className="bg-card border-primary/20">
-          <AlertDialogHeader>
-            <AlertDialogTitle>Clear chat?</AlertDialogTitle>
-            <AlertDialogDescription>
-              Your conversation will be reset and the welcome message will show again. This can&apos;t be undone.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleResetConfirm}
-              disabled={resetMutation.isPending}
-              className="bg-primary hover:bg-primary/90"
-            >
-              {resetMutation.isPending ? "Clearing…" : "Clear chat"}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </div>
   );
 }
