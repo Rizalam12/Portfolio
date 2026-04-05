@@ -19,9 +19,10 @@ export function ChatBot() {
   const [localMessages, setLocalMessages] = useState<ChatMessage[]>([]);
 
   const welcomeMsg: ChatMessage = {
-    id: 'welcome',
+    id: 0,
     role: 'assistant',
     content: "👋 Hi there!\nAsk me anything about Rizwan — skills, projects, experience, education, certifications, or contact. I answer only what you ask.",
+    createdAt: null,
   };
 
 const endRef = useRef<HTMLDivElement>(null);
@@ -38,9 +39,10 @@ const endRef = useRef<HTMLDivElement>(null);
     },
     onMutate: async (message: string) => {
       const optimisticUser: ChatMessage = {
-        id: `temp-${Date.now()}`,
+        id: Date.now(),
         role: 'user',
         content: message,
+        createdAt: null,
       };
       setLocalMessages(prev => [...prev, optimisticUser]);
       setInput('');
@@ -50,9 +52,10 @@ const endRef = useRef<HTMLDivElement>(null);
       console.log('Chat API response:', data);
       const aiContent = data.message || 'No response received.';
       const aiMsg: ChatMessage = {
-        id: `ai-${Date.now()}`,
+        id: Date.now() + 1,
         role: 'assistant',
         content: aiContent,
+        createdAt: null,
       };
       setLocalMessages(prev => [...prev, aiMsg]);
     },
