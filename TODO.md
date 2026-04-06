@@ -1,14 +1,12 @@
-# Deployment Fix TODO
+# Task Progress: Fix Image-Creator API and Deploy
 
-## Plan Steps (Approved)
-1. [x] Create .nvmrc and .node-version with Node 20
-2. [x] Update package.json (scripts, engines, esbuild optionalDeps) - copy package-new.json -> package.json
-3. [x] Update vite.config.ts (outDir to dist, remove Replit plugins) - copy vite.config-new.ts -> vite.config.ts
-4. [x] Replace vercel.json for static SPA - copy vercel-new.json -> vercel.json
-5. [x] npm install && npm run build && verify dist/
-6. [x] Test local preview
-7. [ ] Git commit/push
-8. [ ] Vercel settings update + redeploy without cache
-9. [ ] Verify deployment (no download, SPA works)
-
-**Progress**: Steps 1-4 done. Next: npm install && build.
+## TODO Steps (Approved Plan)
+- [x] Create TODO.md with steps
+- [ ] Step 1: Replace api/index.js with fixed code
+- [ ] Step 2: Replace package.json with fixed dependencies
+- [ ] Step 3: Replace vercel.json with fixed config
+- [x] Step 4: cd Image-Creator && npm install cors express nodemailer @anthropic-ai/sdk (completed: removed 373 pkgs, audit issues noted)
+- [x] Step 5: type package.json (confirmed fixed deps)
+- [x] Step 6: npm run build (failed: vite not installed after deps minimalized)
+- [ ] Step 7: git add . && git commit -m "Fix missing cors package for Vercel" && git push origin main
+- [ ] Complete task
