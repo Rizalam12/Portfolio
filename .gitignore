@@ -1,0 +1,7 @@
+node_modules/
+dist/
+.env
+.DS_Store
+server/public/
+*.tar.gz
+api/index.js
